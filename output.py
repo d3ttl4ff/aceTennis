@@ -68,10 +68,41 @@ class Output(object):
         
     @staticmethod
     def print_scoreboard(player_1: str, player_1_score: str, player_2_score: str, player_2: str) -> None:
+        scores_length = len(player_1) + len(player_1_score) + len(player_2_score) + len(player_2) + 11
         max_subtitle_len = 63
+        rest_len = (max_subtitle_len - scores_length) // 2 - 2  # Adjusted for the border characters
+        
+        player_1_color = 'black'
+        player_2_color = 'black'
+        subtitle_highlight = '226'
+        subtool_color = 'black'
+        subtool_highlight = 'turquoise_2'
+        subcommand_color = 'turquoise_2'
+        subcommand_highlight = '234'
+        border_color = '10'
+        player_1_highlight = 'green'
+        player_2_highlight = 'green'
+
+        # Subtitle, subtool and subcommand 
+        player_1_part = Output.colored(' ' + player_1 + ' ', color=player_1_color, highlight=player_1_highlight, attrs='bold')
+        player_1_score_part = Output.colored(' ' + player_1_score + ' ', color=subtool_color, highlight=subtool_highlight, attrs='bold')
+        player_2_score_part = Output.colored(' ' + player_2_score + ' ', color=subtool_color, highlight=subtool_highlight, attrs='bold')
+        player_2_part = Output.colored(' ' + player_2 + ' ', color=player_2_color, highlight=player_2_highlight, attrs='bold')
+        
+        # top_border = Output.colored('╔═════════check═╣ ', color=border_color, attrs='bold')
+        # top_border = Output.colored('╔════════', color=border_color, attrs='bold')
+        # bottom_border = Output.colored('╚═', color=border_color)
+        # buttom_cmd = Output.colored('$', color=border_color, attrs='bold')
+        left_border = Output.colored('═' * rest_len, color=border_color, attrs='bold')
+        right_border = Output.colored('═' * rest_len, color=border_color, attrs='bold')
+        player_1_connector = Output.colored('▒', color=subtitle_highlight, attrs='bold')
+        player_1_score_connector = Output.colored('▒', color=subtool_highlight, attrs='bold')
+        player_2_connector = Output.colored('▒', color=subtitle_highlight, attrs='bold')
+        player_2_score_connector = Output.colored('▒', color=subtool_highlight, attrs='bold')
+        score_connector = Output.colored('░', color=border_color, attrs='bold')
         
         
-        
+        print(left_border + player_1_part + player_1_score_connector + player_1_score_part + player_1_score_connector + score_connector + player_2_score_connector + player_2_score_part + player_2_score_connector + player_2_part + right_border)
         
         
     @staticmethod
