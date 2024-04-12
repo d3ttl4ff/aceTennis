@@ -1,6 +1,8 @@
 import random
 import matplotlib.pyplot as plt
 
+from output import Output
+
 #Welcome message and default parameter values
 print("SIMPLE MENS' SINGLES TENNIS SIMULATOR")
 P0FS  = 0.76
@@ -41,31 +43,31 @@ def PointWinner(serving, P0FS, P0FSW, P0SS, P0SSW, P1FS, P1FSW, P1SS, P1SSW):
     """The function takes the current server as a parameter and returns the winner of the point."""
     # If Player 0 is serving
     if serving == 0:
-        # First serve successful
         if random.random() < P0FS:
-            # First serve winner if the random possibility is less than the probability of winning the point on first serve
-            return 0 if random.random() < P0FSW else 1 
-        # First serve fault and Second serve successful
-        elif random.random() < P0SS:
-            # Second serve winner if the random possibility is less than the probability of winning the point on second serve
-            return 0 if random.random() < P0SSW else 1
-        # Both first and second serve faults so the point goes to the opponent (Player 1)
+            # First serve is in, determine if it wins the point
+            return 0 if random.random() < P0FSW else 1
         else:
-            return 1
-        
+            # First serve was a fault, check second serve
+            if random.random() < P0SS:
+                # Second serve is in, determine if it wins the point
+                return 0 if random.random() < P0SSW else 1
+            else:
+                # Both serves are faults, opponent wins the point
+                return 1
+            
     # If Player 1 is serving
     else:
-        # First serve successful
         if random.random() < P1FS:
-            # First serve winner if the random possibility is less than the probability of winning the point on first serve
+            # First serve is in, determine if it wins the point
             return 1 if random.random() < P1FSW else 0
-        # First serve fault and Second serve successful
-        elif random.random() < P1SS:
-            # Second serve winner if the random possibility is less than the probability of winning the point on second serve
-            return 1 if random.random() < P1SSW else 0
-        # Both first and second serve faults so the point goes to the opponent (Player 0)
         else:
-            return 0
+            # First serve was a fault, check second serve
+            if random.random() < P1SS:
+                # Second serve is in, determine if it wins the point
+                return 1 if random.random() < P1SSW else 0
+            else:
+                # Both serves are faults, opponent wins the point
+                return 0
 
 def PlayGame(serving, P0FS, P0FSW, P0SS, P0SSW, P1FS, P1FSW, P1SS, P1SSW):
     """The function simulates a game (with the same player serving throughout) and determines the winner.
@@ -93,10 +95,10 @@ def PlayGame(serving, P0FS, P0FSW, P0SS, P0SSW, P1FS, P1FSW, P1SS, P1SSW):
         
         # If the winner has won 4 or more points and has 2 more points than the opponent, the game is over
         if score["Player " + str(winner)] >= 4 and score["Player " + str(winner)] - score["Player " + str(1-winner)] >= 2:
-            # Print the game winner and final scores
+            # # Print the game winner and final scores
             # print(f"\nGame Winner: Player {winner}. Final score - Player 0: {score['Player 0']}, Player 1: {score['Player 1']}")
             return winner
- 
+
 def PlaySet(serving, P0FS, P0FSW, P0SS, P0SSW, P1FS, P1FSW, P1SS, P1SSW):
     """The function simulates an entire set and determines the winner.
     [Parameters]:
@@ -115,6 +117,9 @@ def PlaySet(serving, P0FS, P0FSW, P0SS, P0SSW, P1FS, P1FSW, P1SS, P1SSW):
     # Initialize a counter for the number of games played
     game_count = 0
     
+    # Track game wins over time for plotting
+    game_wins = {"Player 0": [], "Player 1": []}
+    
     # Continue playing the set until one player wins 6 or more games and has 2 more games than the opponent
     while True:
         # Determine the winner of the game
@@ -130,16 +135,73 @@ def PlaySet(serving, P0FS, P0FSW, P0SS, P0SSW, P1FS, P1FSW, P1SS, P1SSW):
         print(f"+{'-'*75}+")
         print(f"Game {game_count}: Player {game_winner} wins the game. Current game wins - Player 0: {score['Player 0']}, Player 1: {score['Player 1']}")
         print("")
+        game_wins["Player 0"].append(score["Player 0"])
+        game_wins["Player 1"].append(score["Player 1"])
         
         # If the game_winner has won 6 or more games and has 2 more games than the opponent, the set is over
         if score["Player " + str(game_winner)] >= 6 and score["Player " + str(game_winner)] - score["Player " + str(1-game_winner)] >= 2:
             # Print the set winner and final scores
             print(f"Set Winner: Player {game_winner}. Final score - Player 0: {score['Player 0']}, Player 1: {score['Player 1']}")
+            Output.PlotGameWins(game_wins)
             return game_winner
-
+        
         # Switch the server for the next game
         serving = 1 - serving
+
+# print(PlaySet(serving, P0FS, P0FSW, P0SS, P0SSW, P1FS, P1FSW, P1SS, P1SSW))
+
+"""Extend your code so that it simulates an entire match (the winner being the first player to win three sets). A
+ summary of the entire simulation should be written on the screen and should contain interesting statistical
+ information about the game such as:
+
+ For each set, the winner of the set and the number of games won by each player
+ -The winner of the match
+ -Number of points won by each player during the match
+ -The total number of service games won by each player in a match
+ -The percentage of points won on first serve, second serve, etc."""
+ 
+def PlayMatch():
+    """The function simulates an entire match and determines the winner.
+    """
+    # Initialize the scores for both players in a dictionary with the names of the players as keys
+    score = {"Player 0": 0, "Player 1": 0}
+    
+    # Initialize a counter for the number of sets played
+    set_count = 0
+    
+    # Track set wins over time for plotting
+    set_wins = {"Player 0": [], "Player 1": []}
+    
+    # Continue playing the match until one player wins 3 sets
+    while True:
+        # Determine the winner of the set
+        set_winner = PlaySet(serving, P0FS, P0FSW, P0SS, P0SSW, P1FS, P1FSW, P1SS, P1SSW)
         
-print(PlaySet(serving, P0FS, P0FSW, P0SS, P0SSW, P1FS, P1FSW, P1SS, P1SSW))
+        # Increment the score of the set_winner
+        score["Player " + str(set_winner)] += 1
+        
+        # Increment the set count
+        set_count += 1
+        
+        # Print the outcome of the current set
+        print(f"+{'-'*75}+")
+        print(f"Set {set_count}: Player {set_winner} wins the set. Current set wins - Player 0: {score['Player 0']}, Player 1: {score['Player 1']}")
+        print("")
+        set_wins["Player 0"].append(score["Player 0"])
+        set_wins["Player 1"].append(score["Player 1"])
+        
+        # If the set_winner has won 3 sets, the match is over
+        if score["Player " + str(set_winner)] >= 3:
+            # Print the match winner and final scores
+            print(f"Match Winner: Player {set_winner}. Final score - Player 0: {score['Player 0']}, Player 1: {score['Player 1']}")
+            Output.PlotGameWins(set_wins)
+            return set_winner
+        
+PlayMatch()
+
+
+
 
 print("\nEnd of simulation.")
+
+
