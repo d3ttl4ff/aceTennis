@@ -1,10 +1,12 @@
 import random
 import matplotlib.pyplot as plt
 
+from Config import *
 from output import Output
 
 #Welcome message and default parameter values
-print("SIMPLE MENS' SINGLES TENNIS SIMULATOR")
+# print("SIMPLE MENS' SINGLES TENNIS SIMULATOR")
+print(BANNER)
 P0FS  = 0.76
 P0FSW = 0.74
 P0SS  = 0.94
@@ -15,7 +17,7 @@ P1SS  = 0.92
 P1SSW = 0.60
 
 #Ask the user if they want to specify different parameter values
-s = input("Use default input parameters? (y/n) >> ")
+s = input("[~] Use default input parameters? (y/n) >> ")
 if s != "y" and s != "Y":
     print("Please input the following information for Player 0, then Player 1:")
     print("-Probability first serve legal")
@@ -95,8 +97,6 @@ def PlayGame(serving, P0FS, P0FSW, P0SS, P0SSW, P1FS, P1FSW, P1SS, P1SSW):
         
         # If the winner has won 4 or more points and has 2 more points than the opponent, the game is over
         if score["Player " + str(winner)] >= 4 and score["Player " + str(winner)] - score["Player " + str(1-winner)] >= 2:
-            # # Print the game winner and final scores
-            # print(f"\nGame Winner: Player {winner}. Final score - Player 0: {score['Player 0']}, Player 1: {score['Player 1']}")
             return winner
 
 def PlaySet(serving, P0FS, P0FSW, P0SS, P0SSW, P1FS, P1FSW, P1SS, P1SSW):
@@ -140,25 +140,13 @@ def PlaySet(serving, P0FS, P0FSW, P0SS, P0SSW, P1FS, P1FSW, P1SS, P1SSW):
         
         # If the game_winner has won 6 or more games and has 2 more games than the opponent, the set is over
         if score["Player " + str(game_winner)] >= 6 and score["Player " + str(game_winner)] - score["Player " + str(1-game_winner)] >= 2:
-            # Print the set winner and final scores
-            print(f"Set Winner: Player {game_winner}. Final score - Player 0: {score['Player 0']}, Player 1: {score['Player 1']}")
-            Output.PlotGameWins(game_wins)
+            # # Print the set winner and final scores
+            # print(f"Set Winner: Player {game_winner}. Final score - Player 0: {score['Player 0']}, Player 1: {score['Player 1']}")
+            # Output.PlotGameWins(game_wins)
             return game_winner
         
         # Switch the server for the next game
         serving = 1 - serving
-
-# print(PlaySet(serving, P0FS, P0FSW, P0SS, P0SSW, P1FS, P1FSW, P1SS, P1SSW))
-
-"""Extend your code so that it simulates an entire match (the winner being the first player to win three sets). A
- summary of the entire simulation should be written on the screen and should contain interesting statistical
- information about the game such as:
-
- For each set, the winner of the set and the number of games won by each player
- -The winner of the match
- -Number of points won by each player during the match
- -The total number of service games won by each player in a match
- -The percentage of points won on first serve, second serve, etc."""
  
 def PlayMatch():
     """The function simulates an entire match and determines the winner.
@@ -194,13 +182,12 @@ def PlayMatch():
         if score["Player " + str(set_winner)] >= 3:
             # Print the match winner and final scores
             print(f"Match Winner: Player {set_winner}. Final score - Player 0: {score['Player 0']}, Player 1: {score['Player 1']}")
+            
             Output.PlotGameWins(set_wins)
+            
             return set_winner
         
 PlayMatch()
-
-
-
 
 print("\nEnd of simulation.")
 
