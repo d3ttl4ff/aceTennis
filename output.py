@@ -41,6 +41,68 @@ class Output(object):
         print(table)
         
     @staticmethod
+    def print_title(title: str) -> None:
+        title_len = len(title) + 2  # Adding 2 for the spaces around the title
+        max_title_len = 63
+        rest_len = (max_title_len - title_len) // 2 - 2  # Adjusted for the border characters
+        
+        title_color = '6'
+        border_color = '10'
+
+        print()
+        # Top border
+        top_border = ' ' * rest_len + '╔' + '═' * (title_len) + '╗'
+        Output.print(top_border, color=border_color, attrs='bold')
+
+        # Title row
+        title_part = Output.colored(' ' + title + ' ', color=title_color)
+        # For the title row, since it combines different colors, print parts separately
+        left_border = Output.colored('═' * rest_len + '╣', color=border_color, attrs='bold')
+        right_border = Output.colored('╠' + '═' * rest_len, color=border_color, attrs='bold')
+        print(left_border + title_part + right_border)
+
+        # Bottom border
+        bottom_border = ' ' * rest_len + '╚' + '═' * (title_len) + '╝'
+        Output.print(bottom_border, color=border_color, attrs='bold')
+        # print()
+        
+    @staticmethod
+    def print_scoreboard(player_1: str, player_1_score: str, player_2_score: str, player_2: str) -> None:
+        max_subtitle_len = 63
+        
+        
+        
+        
+        
+    @staticmethod
+    def print_subtitle(subtitle: str, subtool: str, subcommand: str) -> None:
+        subtitle_color = 'black'
+        subtitle_highlight = '226'
+        subtool_color = 'black'
+        subtool_highlight = 'turquoise_2'
+        subcommand_color = 'turquoise_2'
+        subcommand_highlight = '234'
+        border_color = '10'
+
+        # Subtitle, subtool and subcommand 
+        subtitle_part = Output.colored(' ' + subtitle + ' ', color=subtitle_color, highlight=subtitle_highlight, attrs='bold')
+        subtool_part = Output.colored(' ' + subtool + ' ', color=subtool_color, highlight=subtool_highlight, attrs='bold')
+        subcommand_part = Output.colored(' ' + subcommand + ' ', color=subcommand_color, attrs='bold')
+        check_part = Output.colored(' check ', color='black', highlight=border_color, attrs='bold')
+        
+        # top_border = Output.colored('╔═════════check═╣ ', color=border_color, attrs='bold')
+        top_border = Output.colored('╔════════', color=border_color, attrs='bold')
+        bottom_border = Output.colored('╚═', color=border_color)
+        buttom_cmd = Output.colored('$', color=border_color, attrs='bold')
+        subtitle_connector = Output.colored('▒', color=subtitle_highlight, attrs='bold')
+        subtool_connector = Output.colored('▒', color=subtool_highlight, attrs='bold')
+        check_connector = Output.colored('▒', color=border_color, attrs='bold')
+        
+        print(top_border + check_part + check_connector + subtitle_connector + subtitle_part + subtitle_connector + subtool_connector + subtool_part)
+        print(bottom_border + buttom_cmd + subcommand_part)
+        print()
+        
+    @staticmethod
     def PlotGameWins(game_wins):
         plt.figure(figsize=(10, 5))
         plt.plot(game_wins["Player 0"], label='Player 0 Game Wins', marker='o')
@@ -51,3 +113,5 @@ class Output(object):
         plt.legend()
         plt.grid(True)
         plt.show() 
+        
+        

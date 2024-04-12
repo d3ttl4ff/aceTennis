@@ -145,7 +145,7 @@ def PlaySet(serving, P0FS, P0FSW, P0SS, P0SSW, P1FS, P1FSW, P1SS, P1SSW):
             # # Print the set winner and final scores
             # print(f"Set Winner: Player {game_winner}. Final score - Player 0: {score['Player 0']}, Player 1: {score['Player 1']}")
             # Output.PlotGameWins(game_wins)
-            return game_winner
+            return game_winner, game_wins
         
         # Switch the server for the next game
         serving = 1 - serving
@@ -165,7 +165,7 @@ def PlayMatch():
     # Continue playing the match until one player wins 3 sets
     while True:
         # Determine the winner of the set
-        set_winner = PlaySet(serving, P0FS, P0FSW, P0SS, P0SSW, P1FS, P1FSW, P1SS, P1SSW)
+        set_winner, game_wins = PlaySet(serving, P0FS, P0FSW, P0SS, P0SSW, P1FS, P1FSW, P1SS, P1SSW)
         
         # Increment the score of the set_winner
         score["Player " + str(set_winner)] += 1
@@ -180,12 +180,26 @@ def PlayMatch():
         set_wins["Player 0"].append(score["Player 0"])
         set_wins["Player 1"].append(score["Player 1"])
         
+        # Prepare data for the table output
+        data = []
+            
+        for i in range(2):
+            data.append([f"Player {i}", set_wins["Player " + str(i)][-1], game_wins["Player " + str(i)][-1]])    
+        
+        # Print the table output       
+        columns = ["Player", "Current Set Wins", "No of games won in this set"]
+        # Output.print(f"[+] Player {set_winner} WON!", color='green', attrs='bold')
+        Output.print_title(f"Set {set_count} Winner : Player {set_winner}")
+        Output.table(columns, data)
+        
+        # Output.PlotGameWins(set_wins)
+        
         # If the set_winner has won 3 sets, the match is over
         if score["Player " + str(set_winner)] >= 3:
             # Print the match winner and final scores
-            print(f"Match Winner: Player {set_winner}. Final score - Player 0: {score['Player 0']}, Player 1: {score['Player 1']}")
+            print(f"\nMatch Winner: Player {set_winner}. Final score - Player 0: {score['Player 0']}, Player 1: {score['Player 1']}")
             
-            Output.PlotGameWins(set_wins)
+            Output.print_subtitle(str(set_winner), str(score['Player 0']), str(score['Player 1']))
             
             return set_winner
         
