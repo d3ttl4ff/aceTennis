@@ -84,7 +84,7 @@ def PointWinner(serving, P0FS, P0FSW, P0SS, P0SSW, P1FS, P1FSW, P1SS, P1SSW):
     # If Player 0 is serving
     if serving == 0:
         # First serve successful
-        if random.random() < P0FS: 
+        if random.random() < P0FS:
             # First serve winner if the random possibility is less than the probability of winning the point on first serve
             return 0 if random.random() < P0FSW else 1 
         # First serve fault and Second serve successful
@@ -108,7 +108,62 @@ def PointWinner(serving, P0FS, P0FSW, P0SS, P0SSW, P1FS, P1FSW, P1SS, P1SSW):
         # Both first and second serve faults so the point goes to the opponent (Player 0)
         else:
             return 0
+        
+""" 
+A men’s singles tennis match is played between two players. In each game, one player is designated as a
+ server and one as a receiver. Service alternates game by game. A single game consists of a sequence of points
+ played with the same player serving. A game is won by a player only when (a) he scores four or more points
+ and (b) he has two or more points than his opponent.
+ In this simulation, the winner of the tennis match is the first player to win three sets in total (i.e. best of
+ f
+ ive sets). Unlike grand slam tournaments such as Wimbledon, a player wins a set when (a) he has won six
+ or more games and (b) he has won two or more games than his opponent in the set (i.e., we do not consider
+ “tie breaks”)
+ 
 
+Next, write a function called PlayGame that simulates a game (with the same player serving throughout)
+ and determines the winner. Finally, write a function PlaySet to simulate an entire set. Remember that the
+ server alternates after each game."""
 
-print("End of simulation.")
+def PlayGame(serving, P0FS, P0FSW, P0SS, P0SSW, P1FS, P1FSW, P1SS, P1SSW):
+    """The function simulates a game (with the same player serving throughout) and determines the winner.
+    [Parameters]:
+    serving (int): The player who is serving (0 or 1).
+    P0FS (float): Probability of Player 0's first serve being legal.
+    P0FSW (float): Probability of Player 0 winning the point on his first serve.
+    P0SS (float): Probability of Player 0's second serve being legal.
+    P0SSW (float): Probability of Player 0 winning the point on his second serve.
+    P1FS (float): Probability of Player 1's first serve being legal.
+    P1FSW (float): Probability of Player 1 winning the point on his first serve.
+    P1SS (float): Probability of Player 1's second serve being legal.
+    P1SSW (float): Probability of Player 1 winning the point on his second serve.
+    """
+    # Initialize the scores for both players in a dictionary with the names of the players as keys
+    score = {"Player 0": 0, "Player 1": 0}
+    
+    # Initialize a counter for the number of points played
+    point_count = 0
+    
+    # Continue playing the game until one player wins
+    while True:
+        # Determine the winner of the point
+        winner = PointWinner(serving, P0FS, P0FSW, P0SS, P0SSW, P1FS, P1FSW, P1SS, P1SSW)
+        
+        # Increment the score of the winner
+        score["Player " + str(winner)] += 1
+        
+        # Increment the point count
+        point_count += 1
+        
+        # Print the outcome of the current point
+        print(f"Point {point_count}: Player {winner} wins the point. Current score - Player 0: {score['Player 0']}, Player 1: {score['Player 1']}")
+        
+        # If the winner has won 4 or more points and has 2 more points than the opponent, the game is over
+        if score["Player " + str(winner)] >= 4 and score["Player " + str(winner)] - score["Player " + str(1-winner)] >= 2:
+            # Print the game winner and final scores
+            print(f"\nGame Winner: Player {winner}. Final score - Player 0: {score['Player 0']}, Player 1: {score['Player 1']}")
+            return winner
 
+print(PlayGame(serving, P0FS, P0FSW, P0SS, P0SSW, P1FS, P1FSW, P1SS, P1SSW))
+
+print("\nEnd of simulation.")
