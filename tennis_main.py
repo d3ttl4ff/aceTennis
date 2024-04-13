@@ -100,7 +100,7 @@ def PlayGame(serving, P0FS, P0FSW, P0SS, P0SSW, P1FS, P1FSW, P1SS, P1SSW):
             # # Print the game winner and final scores
             # print(f"\nGame Winner: Player {winner}. Final score - Player 0: {score['Player 0']}, Player 1: {score['Player 1']}")
             service_game_win = 1 if winner == serving else 0
-            return winner, service_game_win
+            return winner, service_game_win, point_count, score
 
 def PlaySet(serving, P0FS, P0FSW, P0SS, P0SSW, P1FS, P1FSW, P1SS, P1SSW):
     """The function simulates an entire set and determines the winner.
@@ -121,15 +121,21 @@ def PlaySet(serving, P0FS, P0FSW, P0SS, P0SSW, P1FS, P1FSW, P1SS, P1SSW):
     game_count = 0
     
     # Track game wins over time for plotting
-    game_wins = {"Player 0": [], "Player 1": []}
+    game_wins = {"Player 0": 0, "Player 1": 0}
     
     # Track service game wins over time for plotting
     service_games_won = {"Player 0": 0, "Player 1": 0}
     
+    # Track total points played in the set
+    set_total_points = 0
+    
+    # Track total player points
+    set_player_points = {"Player 0": 0, "Player 1": 0}
+    
     # Continue playing the set until one player wins 6 or more games and has 2 more games than the opponent
     while True:
         # Determine the winner of the game
-        game_winner, service_game_win = PlayGame(serving, P0FS, P0FSW, P0SS, P0SSW, P1FS, P1FSW, P1SS, P1SSW)
+        game_winner, service_game_win, point_count, player_point_score = PlayGame(serving, P0FS, P0FSW, P0SS, P0SSW, P1FS, P1FSW, P1SS, P1SSW)
         
         # Increment the score of the game_winner
         score["Player " + str(game_winner)] += 1
@@ -144,15 +150,22 @@ def PlaySet(serving, P0FS, P0FSW, P0SS, P0SSW, P1FS, P1FSW, P1SS, P1SSW):
         print(f"+{'-'*75}+")
         print(f"Game {game_count}: Player {game_winner} wins the game. Current game wins - Player 0: {score['Player 0']}, Player 1: {score['Player 1']}")
         print("")
-        game_wins["Player 0"].append(score["Player 0"])
-        game_wins["Player 1"].append(score["Player 1"])
+
+        # Accumulate game wins over time
+        game_wins["Player " + str(game_winner)] += 1
+        
+        # Accumulate total points played in the set
+        set_total_points += point_count
+        
+        # Accumulate total player points in the set
+        set_player_points["Player 0"] += player_point_score["Player 0"]
+        set_player_points["Player 1"] += player_point_score["Player 1"]
         
         # If the game_winner has won 6 or more games and has 2 more games than the opponent, the set is over
         if score["Player " + str(game_winner)] >= 6 and score["Player " + str(game_winner)] - score["Player " + str(1-game_winner)] >= 2:
             # # Print the set winner and final scores
             # print(f"Set Winner: Player {game_winner}. Final score - Player 0: {score['Player 0']}, Player 1: {score['Player 1']}")
-            # Output.PlotGameWins(game_wins)
-            return game_winner, game_wins, service_games_won
+            return game_winner, game_wins, service_games_won, game_count, set_total_points, set_player_points
         
         # Switch the server for the next game
         serving = 1 - serving
@@ -169,13 +182,25 @@ def PlayMatch():
     # Track set wins over time 
     set_wins = {"Player 0": [], "Player 1": []}
     
-    # Track service game wins over time 
+    # Track total service games wins over time 
     total_service_games_won = {"Player 0": 0, "Player 1": 0}
+    
+    # Track total game wins over time
+    total_game_wins = {"Player 0": 0, "Player 1": 0}
+    
+    # Track total games played
+    total_game_count = 0
+    
+    # Track total points played in the match
+    total_point_count = 0
+    
+    # Track total player points
+    total_player_points = {"Player 0": 0, "Player 1": 0}
     
     # Continue playing the match until one player wins 3 sets
     while True:
         # Determine the winner of the set
-        set_winner, game_wins, service_games_won = PlaySet(serving, P0FS, P0FSW, P0SS, P0SSW, P1FS, P1FSW, P1SS, P1SSW)
+        set_winner, game_wins, service_games_won, game_count, set_total_points, set_player_points = PlaySet(serving, P0FS, P0FSW, P0SS, P0SSW, P1FS, P1FSW, P1SS, P1SSW)
         
         # Increment the score of the set_winner
         score["Player " + str(set_winner)] += 1
@@ -190,23 +215,28 @@ def PlayMatch():
         set_wins["Player 0"].append(score["Player 0"])
         set_wins["Player 1"].append(score["Player 1"])
         
-        # Accumulate service games won
+        # Accumulate total game wins, service games won, game count, total points played and player points  
+        total_game_wins["Player 0"] += game_wins["Player 0"]
+        total_game_wins["Player 1"] += game_wins["Player 1"]
         total_service_games_won["Player 0"] += service_games_won["Player 0"]
         total_service_games_won["Player 1"] += service_games_won["Player 1"]
+        total_game_count += game_count
+        total_point_count += set_total_points
+        total_player_points["Player 0"] += set_player_points["Player 0"]
+        total_player_points["Player 1"] += set_player_points["Player 1"]
         
         # Prepare data for the table output
         data = []
             
         for i in range(2):
-            data.append([f"Player {i}", set_wins["Player " + str(i)][-1], game_wins["Player " + str(i)][-1]])    
+            data.append([f"Player {i}", set_wins["Player " + str(i)][-1], game_wins["Player " + str(i)]])    
         
         # Print the table output       
         columns = ["Player", "Current Set Wins", "No of games won in this set"]
         # Output.print(f"[+] Player {set_winner} WON!", color='green', attrs='bold')
         Output.print_title(f"Set {set_count} Winner : Player {set_winner}")
         Output.table(columns, data)
-        
-        # Output.PlotGameWins(set_wins)
+        print("")
         
         # If the set_winner has won 3 sets, the match is over
         if score["Player " + str(set_winner)] >= 3:
@@ -215,15 +245,23 @@ def PlayMatch():
             
             Output.print_title(f"Match Winner : Player {set_winner}")
             Output.print_scoreboard(str("Player 0"), str(score['Player 0']), str(score['Player 1']), str("Player 1"))
+            print("")
+            Output.print_sub_scoreboard(str("Total Points"), str(total_point_count))
+            Output.print_sub_scoreboard(str("Total Games "), str(total_game_count))
+            Output.print_sub_scoreboard(str("Total Sets  "), str(set_count))
             
             final_data = []
             
             for i in range(2):
                 # final_data.append([f"Player {i}", set_wins["Player " + str(i)], game_wins["Player " + str(i)]])
-                final_data.append([f"Player {i}", set_wins["Player " + str(i)], game_wins["Player " + str(i)], total_service_games_won["Player " + str(i)]])
+                final_data.append([f"Player {i}", 
+                                   set_wins["Player " + str(i)][-1], 
+                                   total_game_wins["Player " + str(i)], 
+                                   total_service_games_won["Player " + str(i)],
+                                   total_player_points["Player " + str(i)]])
                 
             # final_columns = ["Player", "Set No", "Game Wins in the set", "Total points scored in the set", "Service Games Won"]
-            final_columns = ["Player", "Set No", "Game Wins in the set", "Service Games Won"]
+            final_columns = ["Player", "Total Sets Won", "Total Games Won", "Service Games Won", "Total Points Scored"]
             Output.table(final_columns, final_data)
             
             return set_winner

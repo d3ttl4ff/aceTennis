@@ -13,6 +13,7 @@ class Output(object):
         """Print string with styles"""
         print(Output.colored(string, color, highlight, attrs))
 
+
     @staticmethod
     def colored(string, color=None, highlight=None, attrs=None):
         """Apply styles to a given string"""
@@ -20,6 +21,7 @@ class Output(object):
         return colored.stylize(string, (colored.fg(color) if color else '') + \
                                        (colored.bg(highlight) if highlight else '') + \
                                        (colored.attr(attrs) if attrs else ''))
+       
         
     @staticmethod
     def table(columns, data, hrules=True, borders=True):
@@ -39,6 +41,7 @@ class Output(object):
         if not borders:
             table.border = False
         print(table)
+        
         
     @staticmethod
     def print_title(title: str) -> None:
@@ -66,6 +69,7 @@ class Output(object):
         Output.print(bottom_border, color=border_color, attrs='bold')
         # print()
         
+        
     @staticmethod
     def print_scoreboard(player_1: str, player_1_score: str, player_2_score: str, player_2: str) -> None:
         scores_length = len(player_1) + len(player_1_score) + len(player_2_score) + len(player_2) + 11
@@ -83,16 +87,11 @@ class Output(object):
         player_1_highlight = 'green'
         player_2_highlight = 'green'
 
-        # Subtitle, subtool and subcommand 
         player_1_part = Output.colored(' ' + player_1 + ' ', color=player_1_color, highlight=player_1_highlight, attrs='bold')
         player_1_score_part = Output.colored(' ' + player_1_score + ' ', color=subtool_color, highlight=subtool_highlight, attrs='bold')
         player_2_score_part = Output.colored(' ' + player_2_score + ' ', color=subtool_color, highlight=subtool_highlight, attrs='bold')
         player_2_part = Output.colored(' ' + player_2 + ' ', color=player_2_color, highlight=player_2_highlight, attrs='bold')
         
-        # top_border = Output.colored('╔═════════check═╣ ', color=border_color, attrs='bold')
-        # top_border = Output.colored('╔════════', color=border_color, attrs='bold')
-        # bottom_border = Output.colored('╚═', color=border_color)
-        # buttom_cmd = Output.colored('$', color=border_color, attrs='bold')
         left_border = Output.colored('═' * rest_len, color=border_color, attrs='bold')
         right_border = Output.colored('═' * rest_len, color=border_color, attrs='bold')
         player_1_connector = Output.colored('▒', color=subtitle_highlight, attrs='bold')
@@ -104,34 +103,35 @@ class Output(object):
         
         print(left_border + player_1_part + player_1_score_connector + player_1_score_part + player_1_score_connector + score_connector + player_2_score_connector + player_2_score_part + player_2_score_connector + player_2_part + right_border)
         
-        
     @staticmethod
-    def print_subtitle(subtitle: str, subtool: str, subcommand: str) -> None:
-        subtitle_color = 'black'
+    def print_sub_scoreboard(total_game_played: str, total_game_count: str) -> None:
+        scores_length = len(total_game_played) + len(total_game_count) + 11
+        max_subtitle_len = 63
+        rest_len = (max_subtitle_len - scores_length) // 2 - 2  # Adjusted for the border characters
+        
+        player_1_color = 'black'
+        player_2_color = 'black'
         subtitle_highlight = '226'
         subtool_color = 'black'
         subtool_highlight = 'turquoise_2'
         subcommand_color = 'turquoise_2'
         subcommand_highlight = '234'
         border_color = '10'
+        total_game_played_part = 'green'
+        player_2_highlight = 'green'
 
-        # Subtitle, subtool and subcommand 
-        subtitle_part = Output.colored(' ' + subtitle + ' ', color=subtitle_color, highlight=subtitle_highlight, attrs='bold')
-        subtool_part = Output.colored(' ' + subtool + ' ', color=subtool_color, highlight=subtool_highlight, attrs='bold')
-        subcommand_part = Output.colored(' ' + subcommand + ' ', color=subcommand_color, attrs='bold')
-        check_part = Output.colored(' check ', color='black', highlight=border_color, attrs='bold')
-        
-        # top_border = Output.colored('╔═════════check═╣ ', color=border_color, attrs='bold')
-        top_border = Output.colored('╔════════', color=border_color, attrs='bold')
-        bottom_border = Output.colored('╚═', color=border_color)
-        buttom_cmd = Output.colored('$', color=border_color, attrs='bold')
-        subtitle_connector = Output.colored('▒', color=subtitle_highlight, attrs='bold')
-        subtool_connector = Output.colored('▒', color=subtool_highlight, attrs='bold')
-        check_connector = Output.colored('▒', color=border_color, attrs='bold')
-        
-        print(top_border + check_part + check_connector + subtitle_connector + subtitle_part + subtitle_connector + subtool_connector + subtool_part)
-        print(bottom_border + buttom_cmd + subcommand_part)
-        print()
+        total_game_played_part = Output.colored(' ' + total_game_played + ' ', color=player_1_color, highlight=total_game_played_part, attrs='bold')
+        total_game_count_part = Output.colored(' ' + total_game_count + ' ', color=subtool_color, highlight=subtitle_highlight, attrs='bold')
+
+        left_border = Output.colored('═' * 15, color=border_color, attrs='bold')
+        # right_border = Output.colored('═' * rest_len, color=border_color, attrs='bold')
+        total_game_played_score_connector = Output.colored('▒', color=subtitle_highlight, attrs='bold')
+        total_game_played_part_connector = Output.colored('▒', color=border_color, attrs='bold')
+        score_connector = Output.colored('░', color=border_color, attrs='bold')
+
+        print(left_border + total_game_played_part + total_game_played_part_connector + score_connector + total_game_played_score_connector + total_game_count_part + total_game_played_score_connector)
+        # print("")
+      
         
     @staticmethod
     def PlotGameWins(game_wins):
