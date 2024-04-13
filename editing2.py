@@ -359,14 +359,25 @@ def PlayMatch():
                     first_serve_win_pct[player] = (first_wins / first_attempts * 100) if first_attempts > 0 else 0
                     second_serve_win_pct[player] = (second_wins / second_attempts * 100) if second_attempts > 0 else 0
             
+            # print("")
+            # Output.print_mini_scoreboard(str("Player 0                   "), border_color="197", font_color="white")
+            # Output.print_sub_scoreboard(str("1st Serve Pt Win Percentage"), str(f"{int(first_serve_win_pct['Player 0'])}%"), subtitle_highlight="105")
+            # Output.print_sub_scoreboard(str("2nd Serve Pt Win Percentage"), str(f"{int(second_serve_win_pct['Player 0'])}%"), subtitle_highlight="105")
+            # print("")
+            # Output.print_mini_scoreboard(str("Player 1                   "), border_color="12", font_color="white")
+            # Output.print_sub_scoreboard(str("1st Serve Pt Win Percentage"), str(f"{int(first_serve_win_pct['Player 1'])}%"), subtitle_highlight="105")
+            # Output.print_sub_scoreboard(str("2nd Serve Pt Win Percentage"), str(f"{int(second_serve_win_pct['Player 1'])}%"), subtitle_highlight="105")
             print("")
-            Output.print_mini_scoreboard(str("Player 0"), border_color="197", font_color="white")
-            Output.print_sub_scoreboard(str("1st Serve Pt Win Percentage"), str(f"{int(first_serve_win_pct['Player 0'])}%"), subtitle_highlight="105")
-            Output.print_sub_scoreboard(str("2nd Serve Pt Win Percentage"), str(f"{int(second_serve_win_pct['Player 0'])}%"), subtitle_highlight="105")
-            print("")
-            Output.print_mini_scoreboard(str("Player 1"), border_color="12", font_color="white")
-            Output.print_sub_scoreboard(str("1st Serve Pt Win Percentage"), str(f"{int(first_serve_win_pct['Player 1'])}%"), subtitle_highlight="105")
-            Output.print_sub_scoreboard(str("2nd Serve Pt Win Percentage"), str(f"{int(second_serve_win_pct['Player 1'])}%"), subtitle_highlight="105")
+            for player in ['Player 0', 'Player 1']:
+                if player == 'Player 0':
+                    body_color = "197"
+                elif player == 'Player 1':
+                    body_color = "12"
+                
+                Output.print_mini_scoreboard(str(player) + (" " * 19) , border_color=body_color, font_color="white")
+                Output.print_sub_scoreboard(str("1st Serve Pt Win Percentage"), str(f"{int(first_serve_win_pct[player])}%"), subtitle_highlight="105")
+                Output.print_sub_scoreboard(str("2nd Serve Pt Win Percentage"), str(f"{int(second_serve_win_pct[player])}%"), subtitle_highlight="105")
+                print("")
             
             serve_data = []
             

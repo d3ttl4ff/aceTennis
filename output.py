@@ -144,7 +144,55 @@ class Output(object):
         
         print(left_border + label_part)
         # print("")
-      
+        
+    @staticmethod
+    def print_point_lable(label: str, border_color="10", font_color="black", attrs=None) -> None:
+        # font_color = 'black'
+        # border_color = '10'
+
+        label_part = Output.colored(' ' + label + ' ', color=font_color, highlight=border_color)
+
+        # left_border = Output.colored('═' * 15, color=border_color, attrs='bold')
+        
+        print(label_part)
+        # print("")
+        
+# Point 1: Player 0 wins the point. Current score - Player 0: 1, Player 1: 0
+# Point 2: Player 1 wins the point. Current score - Player 0: 1, Player 1: 1
+# Point 3: Player 1 wins the point. Current score - Player 0: 1, Player 1: 2
+# Point 4: Player 1 wins the point. Current score - Player 0: 1, Player 1: 3
+# Point 5: Player 0 wins the point. Current score - Player 0: 2, Player 1: 3
+# Point 6: Player 1 wins the point. Current score - Player 0: 2, Player 1: 4
+# print(f"Point {point_count}: Player {winner} wins the point. Current score - Player 0: {score['Player 0']}, Player 1: {score['Player 1']}")
+    
+    @staticmethod
+    def print_full_point_lable(point_count: int, winner: int, score: dict, border_color="10") -> None:
+        # font_color = 'black'
+        # border_color = '10'
+        
+        if winner == 0:
+            font_color = '197'
+        else:
+            font_color = '12'
+
+        point_part = Output.colored('Point ' + str(point_count) + ': ', color=font_color, highlight=border_color)
+        winner_part = Output.colored('Player ' + str(winner) + ' wins the point. ', color=font_color, highlight=border_color)
+        current_score_part = Output.colored('Current score - Player 0: ' + str(score['Player 0']) + ', Player 1: ' + str(score['Player 1']), color=font_color, highlight=border_color)
+        
+        # left_border = Output.colored('═' * 15, color=border_color, attrs='bold')
+        
+        
+        
+        
+        # print("")
+        
+        
+        
+        
+        
+        
+        
+        
         
     @staticmethod
     def PlotGameWins(game_wins):
