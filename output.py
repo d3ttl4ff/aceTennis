@@ -81,8 +81,6 @@ class Output(object):
         subtitle_highlight = '226'
         subtool_color = 'black'
         subtool_highlight = 'turquoise_2'
-        subcommand_color = 'turquoise_2'
-        subcommand_highlight = '234'
         border_color = '10'
         player_1_highlight = 'green'
         player_2_highlight = 'green'
@@ -105,31 +103,34 @@ class Output(object):
         
     @staticmethod
     def print_sub_scoreboard(total_game_played: str, total_game_count: str) -> None:
-        scores_length = len(total_game_played) + len(total_game_count) + 11
-        max_subtitle_len = 63
-        rest_len = (max_subtitle_len - scores_length) // 2 - 2  # Adjusted for the border characters
+        if len(total_game_count) == 1:
+            total_game_count = "00" + total_game_count
+        elif len(total_game_count) == 2:
+            total_game_count = "0" + total_game_count
         
-        player_1_color = 'black'
-        player_2_color = 'black'
+        game_count_length = len(total_game_count)
+        max_score_board_len = 6
+        score_board_rest_len = (max_score_board_len - game_count_length) // 2
+        
+        total_game_played_part_color = 'black'
         subtitle_highlight = '226'
         subtool_color = 'black'
-        subtool_highlight = 'turquoise_2'
-        subcommand_color = 'turquoise_2'
-        subcommand_highlight = '234'
         border_color = '10'
-        total_game_played_part = 'green'
-        player_2_highlight = 'green'
+        total_game_played_part_highlight = 'green'
 
-        total_game_played_part = Output.colored(' ' + total_game_played + ' ', color=player_1_color, highlight=total_game_played_part, attrs='bold')
-        total_game_count_part = Output.colored(' ' + total_game_count + ' ', color=subtool_color, highlight=subtitle_highlight, attrs='bold')
+        total_game_played_part = Output.colored(' ' + total_game_played + ' ', color=total_game_played_part_color, highlight=total_game_played_part_highlight, attrs='bold')
 
         left_border = Output.colored('═' * 15, color=border_color, attrs='bold')
-        # right_border = Output.colored('═' * rest_len, color=border_color, attrs='bold')
         total_game_played_score_connector = Output.colored('▒', color=subtitle_highlight, attrs='bold')
         total_game_played_part_connector = Output.colored('▒', color=border_color, attrs='bold')
         score_connector = Output.colored('░', color=border_color, attrs='bold')
+        
+        left_highlight = Output.colored(' ' * score_board_rest_len, highlight=subtitle_highlight, attrs='bold')
+        right_highlight = Output.colored(' ' * score_board_rest_len, highlight=subtitle_highlight, attrs='bold')
+        score_count_part = Output.colored(total_game_count, color=subtool_color, highlight=subtitle_highlight, attrs='bold')
+        final_score_count_part = left_highlight + score_count_part + right_highlight
 
-        print(left_border + total_game_played_part + total_game_played_part_connector + score_connector + total_game_played_score_connector + total_game_count_part + total_game_played_score_connector)
+        print(left_border + total_game_played_part + total_game_played_part_connector + score_connector + total_game_played_score_connector + final_score_count_part + total_game_played_score_connector)
         # print("")
       
         

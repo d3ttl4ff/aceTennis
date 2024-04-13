@@ -229,10 +229,14 @@ def PlayMatch():
         data = []
             
         for i in range(2):
-            data.append([f"Player {i}", set_wins["Player " + str(i)][-1], game_wins["Player " + str(i)]])    
+            data.append([f"Player {i}", 
+                         set_wins["Player " + str(i)][-1], 
+                         game_wins["Player " + str(i)],
+                         set_player_points["Player " + str(i)]
+                         ])    
         
         # Print the table output       
-        columns = ["Player", "Current Set Wins", "No of games won in this set"]
+        columns = ["Player", "Current Set Wins", "Set Game Wins", "Set Points Scored"]
         # Output.print(f"[+] Player {set_winner} WON!", color='green', attrs='bold')
         Output.print_title(f"Set {set_count} Winner : Player {set_winner}")
         Output.table(columns, data)
