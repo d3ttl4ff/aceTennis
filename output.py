@@ -102,7 +102,7 @@ class Output(object):
         print(left_border + player_1_part + player_1_score_connector + player_1_score_part + player_1_score_connector + score_connector + player_2_score_connector + player_2_score_part + player_2_score_connector + player_2_part + right_border)
         
     @staticmethod
-    def print_sub_scoreboard(total_game_played: str, total_game_count: str) -> None:
+    def print_sub_scoreboard(total_game_played: str, total_game_count: str, subtitle_highlight="226") -> None:
         if len(total_game_count) == 1:
             total_game_count = "00" + total_game_count
         elif len(total_game_count) == 2:
@@ -113,7 +113,7 @@ class Output(object):
         score_board_rest_len = (max_score_board_len - game_count_length) // 2
         
         total_game_played_part_color = 'black'
-        subtitle_highlight = '226'
+        # subtitle_highlight = '226'
         subtool_color = 'black'
         border_color = '10'
         total_game_played_part_highlight = 'green'
@@ -131,6 +131,18 @@ class Output(object):
         final_score_count_part = left_highlight + score_count_part + right_highlight
 
         print(left_border + total_game_played_part + total_game_played_part_connector + score_connector + total_game_played_score_connector + final_score_count_part + total_game_played_score_connector)
+        # print("")
+        
+    @staticmethod
+    def print_mini_scoreboard(label: str, border_color="10", font_color="black") -> None:
+        # font_color = 'black'
+        # border_color = '10'
+
+        label_part = Output.colored(' ' + label + ' ', color=font_color, highlight=border_color, attrs='bold')
+
+        left_border = Output.colored('═' * 15, color=border_color, attrs='bold')
+        
+        print(left_border + label_part)
         # print("")
       
         
