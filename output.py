@@ -139,7 +139,6 @@ class Output(object):
         # border_color = '10'
 
         label_part = Output.colored(' ' + label + ' ', color=font_color, highlight=border_color, attrs='bold')
-
         left_border = Output.colored('═' * 15, color=border_color, attrs='bold')
         
         print(left_border + label_part)
@@ -151,47 +150,49 @@ class Output(object):
         # border_color = '10'
 
         label_part = Output.colored(' ' + label + ' ', color=font_color, highlight=border_color)
-
-        # left_border = Output.colored('═' * 15, color=border_color, attrs='bold')
         
         print(label_part)
         # print("")
         
-# Point 1: Player 0 wins the point. Current score - Player 0: 1, Player 1: 0
-# Point 2: Player 1 wins the point. Current score - Player 0: 1, Player 1: 1
-# Point 3: Player 1 wins the point. Current score - Player 0: 1, Player 1: 2
-# Point 4: Player 1 wins the point. Current score - Player 0: 1, Player 1: 3
-# Point 5: Player 0 wins the point. Current score - Player 0: 2, Player 1: 3
-# Point 6: Player 1 wins the point. Current score - Player 0: 2, Player 1: 4
-# print(f"Point {point_count}: Player {winner} wins the point. Current score - Player 0: {score['Player 0']}, Player 1: {score['Player 1']}")
-    
+        
     @staticmethod
-    def print_full_point_lable(point_count: int, winner: int, score: dict, border_color="10") -> None:
+    def print_full_point_lable(point_count: str, winner: str, score: dict) -> None:
         # font_color = 'black'
         # border_color = '10'
         
-        if winner == 0:
+        if winner == "0":
             font_color = '197'
         else:
             font_color = '12'
+            
+        if len(point_count) == 1:
+            point_count = "0" + str(point_count)
+        else:
+            point_count = str(point_count)
+            
+        # if score['Player 0'] < 10:
+        #     score['Player 0'] = "0" + str(score['Player 0'])
+        # else:
+        #     score['Player 0'] = str(score['Player 0'])
+        
+        # if score['Player 1'] < 10:
+        #     score['Player 1'] = "0" + str(score['Player 1'])
+        # else:
+        #     score['Player 1'] = str(score['Player 1'])
+        for key, value in score.items():
+            if value < 10:
+                score[key] = "0" + str(value)
+            else:
+                score[key] = str(value)    
+        
 
-        point_part = Output.colored('Point ' + str(point_count) + ': ', color=font_color, highlight=border_color)
-        winner_part = Output.colored('Player ' + str(winner) + ' wins the point. ', color=font_color, highlight=border_color)
-        current_score_part = Output.colored('Current score - Player 0: ' + str(score['Player 0']) + ', Player 1: ' + str(score['Player 1']), color=font_color, highlight=border_color)
+        point_part = Output.colored('Point ' + point_count + ': ', color="green")
+        winner_part = Output.colored('Player ' + winner + ' wins the point | ', color=font_color)
+ 
+        # current_score_part = Output.colored("Current score - Player 0: ", color="white") + Output.colored(str(score['Player 0']), color="190"), Output.colored("Player 1: ", color="white") + Output.colored(str(score['Player 1']), color="190")
         
-        # left_border = Output.colored('═' * 15, color=border_color, attrs='bold')
-        
-        
-        
-        
+        print(point_part + winner_part + Output.colored("Current score - Player 0: ", color="white") + Output.colored(score['Player 0'], color="190") + ", " + Output.colored("Player 1: ", color="white") + Output.colored(score['Player 1'], color="190"))
         # print("")
-        
-        
-        
-        
-        
-        
-        
         
         
     @staticmethod

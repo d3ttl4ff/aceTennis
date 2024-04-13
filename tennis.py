@@ -42,12 +42,18 @@ if s != "y" and s != "Y":
 #Check that all the parameters are valid probabilites
 assert min(P0FS,P0FSW,P0SS,P0SSW,P1FS,P1FSW,P1SS,P1SSW) >= 0 and max(P0FS,P0FSW,P0SS,P0SSW,P1FS,P1FSW,P1SS,P1SSW) <= 1, "Error: All probabilites must be between 0 and 1"
 
+livematch = False
+matchchoice = input(Output.colored("[~] Do you want to see the live output? (y/n) > ", color='white', attrs='bold')).lower()
+print("")
+
+if matchchoice == "y":
+    livematch = True
+
 #Decide who is serving first (player 0 or 1)
 serving = random.randint(0, 1)
 # print("Player", serving, "serving first")
 Output.print("[*] Player " + str(serving) + " wins the toss", color='blue', attrs='bold')
 Output.print(f"[+] Player {serving} serving first", color='190', attrs='bold')
-print("")
      
 def PointWinner(serving, P0FS, P0FSW, P0SS, P0SSW, P1FS, P1FSW, P1SS, P1SSW):
     """The function takes the current server as a parameter and returns the winner of the point."""
@@ -100,7 +106,7 @@ def PointWinner(serving, P0FS, P0FSW, P0SS, P0SSW, P1FS, P1FSW, P1SS, P1SSW):
                 serve_stats['Player 1']['faults'] += 1 # Increment double fault count for Player 1
                 return 0, 'fault', serve_stats  # Player 1 double faults
 
-def PlayGame(serving, P0FS, P0FSW, P0SS, P0SSW, P1FS, P1FSW, P1SS, P1SSW):
+def PlayGame(serving, P0FS, P0FSW, P0SS, P0SSW, P1FS, P1FSW, P1SS, P1SSW, livematch):
     """The function simulates a game (with the same player serving throughout) and determines the winner.
     """
     # Initialize the scores for both players in a dictionary with the names of the players as keys
@@ -115,10 +121,12 @@ def PlayGame(serving, P0FS, P0FSW, P0SS, P0SSW, P1FS, P1FSW, P1SS, P1SSW):
         'Player 1': {'first': {'attempts': 0, 'wins': 0}, 'second': {'attempts': 0, 'wins': 0}, 'faults': 0}
     }
     
-    if serving == 0:
-        Output.print(f"[+] Player {serving} serving.", color='197', attrs='bold')
-    else:
-        Output.print(f"[+] Player {serving} serving.", color='12', attrs='bold')
+    if livematch:
+        print(f"")
+        if serving == 0:
+            Output.print(f"[+] Player {serving} serving.", color='197', attrs='bold')
+        else:
+            Output.print(f"[+] Player {serving} serving.", color='12', attrs='bold')
         
     # Continue playing the game until one player wins
     while True:
@@ -139,16 +147,15 @@ def PlayGame(serving, P0FS, P0FSW, P0SS, P0SSW, P1FS, P1FSW, P1SS, P1SSW):
             serve_counts[player]['faults'] += new_serve_counts[player]['faults']
         
         # Print the outcome of the current point
-        print(f"Point {point_count}: Player {winner} wins the point. Current score - Player 0: {score['Player 0']}, Player 1: {score['Player 1']}")
+        if livematch:
+            Output.print_full_point_lable(str(point_count), str(winner), dict(score))
         
         # If the winner has won 4 or more points and has 2 more points than the opponent, the game is over
         if score["Player " + str(winner)] >= 4 and score["Player " + str(winner)] - score["Player " + str(1-winner)] >= 2:
-            # # Print the game winner and final scores
-            # print(f"\nGame Winner: Player {winner}. Final score - Player 0: {score['Player 0']}, Player 1: {score['Player 1']}")
             service_game_win = 1 if winner == serving else 0
             return winner, service_game_win, point_count, score, serve_counts
 
-def PlaySet(serving, P0FS, P0FSW, P0SS, P0SSW, P1FS, P1FSW, P1SS, P1SSW):
+def PlaySet(serving, P0FS, P0FSW, P0SS, P0SSW, P1FS, P1FSW, P1SS, P1SSW, livematch):
     """The function simulates an entire set and determines the winner.
     [Parameters]:
     P0FS (float): Probability of Player 0's first serve being legal.
@@ -185,7 +192,7 @@ def PlaySet(serving, P0FS, P0FSW, P0SS, P0SSW, P1FS, P1FSW, P1SS, P1SSW):
     # Continue playing the set until one player wins 6 or more games and has 2 more games than the opponent
     while True:
         # Determine the winner of the game
-        game_winner, service_game_win, point_count, player_point_score, game_serve_counts = PlayGame(serving, P0FS, P0FSW, P0SS, P0SSW, P1FS, P1FSW, P1SS, P1SSW)
+        game_winner, service_game_win, point_count, player_point_score, game_serve_counts = PlayGame(serving, P0FS, P0FSW, P0SS, P0SSW, P1FS, P1FSW, P1SS, P1SSW, livematch)
         
         # Increment the score of the game_winner
         score["Player " + str(game_winner)] += 1
@@ -197,9 +204,10 @@ def PlaySet(serving, P0FS, P0FSW, P0SS, P0SSW, P1FS, P1FSW, P1SS, P1SSW):
         game_count += 1
         
         # Print the outcome of the current game
-        print(f"+{'-'*75}+")
-        print(f"Game {game_count}: Player {game_winner} wins the game. Current game wins - Player 0: {score['Player 0']}, Player 1: {score['Player 1']}")
-        print("")
+        if livematch:
+            print(f"+{'-'*76}+")
+            print(f"Game {game_count}: Player {game_winner} wins the game. Current game wins - Player 0: {score['Player 0']}, Player 1: {score['Player 1']}")
+            # print("")
 
         # Accumulate game wins over time
         game_wins["Player " + str(game_winner)] += 1
@@ -208,9 +216,9 @@ def PlaySet(serving, P0FS, P0FSW, P0SS, P0SSW, P1FS, P1FSW, P1SS, P1SSW):
         set_total_points += point_count
         
         # Accumulate total player points in the set
-        set_player_points["Player 0"] += player_point_score["Player 0"]
-        set_player_points["Player 1"] += player_point_score["Player 1"]
-        
+        for player in ['Player 0', 'Player 1']:
+            set_player_points[player] += player_point_score[player]
+ 
         # Update aggregate serve counts
         for player in ['Player 0', 'Player 1']:
             for serve in ['first', 'second']:
@@ -220,8 +228,6 @@ def PlaySet(serving, P0FS, P0FSW, P0SS, P0SSW, P1FS, P1FSW, P1SS, P1SSW):
         
         # If the game_winner has won 6 or more games and has 2 more games than the opponent, the set is over
         if score["Player " + str(game_winner)] >= 6 and score["Player " + str(game_winner)] - score["Player " + str(1-game_winner)] >= 2:
-            # # Print the set winner and final scores
-            # print(f"Set Winner: Player {game_winner}. Final score - Player 0: {score['Player 0']}, Player 1: {score['Player 1']}")
             return game_winner, game_wins, service_games_won, game_count, set_total_points, set_player_points, set_serve_counts
         
         # Switch the server for the next game
@@ -261,19 +267,14 @@ def PlayMatch():
     # Continue playing the match until one player wins 3 sets
     while True:
         # Determine the winner of the set
-        set_winner, game_wins, service_games_won, game_count, set_total_points, set_player_points, set_serve_counts = PlaySet(serving, P0FS, P0FSW, P0SS, P0SSW, P1FS, P1FSW, P1SS, P1SSW)
+        set_winner, game_wins, service_games_won, game_count, set_total_points, set_player_points, set_serve_counts = PlaySet(serving, P0FS, P0FSW, P0SS, P0SSW, P1FS, P1FSW, P1SS, P1SSW, livematch)
         
         # Increment the score of the set_winner
         score["Player " + str(set_winner)] += 1
         
         # Increment the set count
         set_count += 1
-        
-        # Print the outcome of the current set
-        print(f"+{'-'*75}+")
-        print(f"Set {set_count}: Player {set_winner} wins the set. Current set wins - Player 0: {score['Player 0']}, Player 1: {score['Player 1']}")
-        print("")
-        
+
         # Accumulate total game wins, service games won, game count, total points played and player points  
         for player in ['Player 0', 'Player 1']:
             set_wins[player].append(score[player])
@@ -303,15 +304,14 @@ def PlayMatch():
         
         # Print the table output       
         columns = ["Player", "Current Set Wins", "Set Game Wins", "Set Points Scored"]
-        # Output.print(f"[+] Player {set_winner} WON!", color='green', attrs='bold')
         Output.print_title(f"Set {set_count} Winner : Player {set_winner}")
         Output.table(columns, data)
-        print("")
+        print("\n")
         
         # If the set_winner has won 3 sets, the match is over
         if score["Player " + str(set_winner)] >= 3:
             # Print the match winner and final scores
-            print(f"\nMatch Winner: Player {set_winner}. Final score - Player 0: {score['Player 0']}, Player 1: {score['Player 1']}")
+            print(f"\nMatch Winner: Player {set_winner}. Final Scored Sets - Player 0: {score['Player 0']}, Player 1: {score['Player 1']}")
             
             Output.print_title(f"Match Winner : Player {set_winner}")
             Output.print_scoreboard(str("Player 0"), str(score['Player 0']), str(score['Player 1']), str("Player 1"))
@@ -323,31 +323,29 @@ def PlayMatch():
             final_data = []
             
             for i in range(2):
-                # final_data.append([f"Player {i}", set_wins["Player " + str(i)], game_wins["Player " + str(i)]])
                 final_data.append([f"Player {i}", 
                                    set_wins["Player " + str(i)][-1], 
                                    total_game_wins["Player " + str(i)], 
                                    total_service_games_won["Player " + str(i)],
                                    total_player_points["Player " + str(i)]])
                 
-            # final_columns = ["Player", "Set No", "Game Wins in the set", "Total points scored in the set", "Service Games Won"]
             final_columns = ["Player", "Total Sets Won", "Total Games Won", "Service Games Won", "Total Points Scored"]
             Output.table(final_columns, final_data)
             
             #-----------------------------------------------------------------------------------------------------
-            if score["Player " + str(set_winner)] >= 3:
-                # Calculate serve win percentages
-                first_serve_win_pct = {}
-                second_serve_win_pct = {}
+            
+            # Calculate serve win percentages
+            first_serve_win_pct = {}
+            second_serve_win_pct = {}
+            
+            for player in ['Player 0', 'Player 1']:
+                first_attempts = total_serve_counts[player]['first']['attempts']
+                first_wins = total_serve_counts[player]['first']['wins']
+                second_attempts = total_serve_counts[player]['second']['attempts']
+                second_wins = total_serve_counts[player]['second']['wins']
                 
-                for player in ['Player 0', 'Player 1']:
-                    first_attempts = total_serve_counts[player]['first']['attempts']
-                    first_wins = total_serve_counts[player]['first']['wins']
-                    second_attempts = total_serve_counts[player]['second']['attempts']
-                    second_wins = total_serve_counts[player]['second']['wins']
-                    
-                    first_serve_win_pct[player] = (first_wins / first_attempts * 100) if first_attempts > 0 else 0
-                    second_serve_win_pct[player] = (second_wins / second_attempts * 100) if second_attempts > 0 else 0
+                first_serve_win_pct[player] = (first_wins / first_attempts * 100) if first_attempts > 0 else 0
+                second_serve_win_pct[player] = (second_wins / second_attempts * 100) if second_attempts > 0 else 0
         
             print("")
             for player in ['Player 0', 'Player 1']:
@@ -359,15 +357,17 @@ def PlayMatch():
                 Output.print_mini_scoreboard(str(player) + (" " * 19) , border_color=body_color, font_color="white")
                 Output.print_sub_scoreboard(str("1st Serve Pt Win Percentage"), str(f"{int(first_serve_win_pct[player])}%"), subtitle_highlight="105")
                 Output.print_sub_scoreboard(str("2nd Serve Pt Win Percentage"), str(f"{int(second_serve_win_pct[player])}%"), subtitle_highlight="105")
-                print("")
-            
+                
+                if player == 'Player 0':
+                    print("")
+                 
             serve_data = []
             
             for i in range(2):
                 serve_data.append([f"Player {i}", 
-                                   total_serve_counts["Player " + str(i)]['first']['attempts'],
-                                   total_serve_counts["Player " + str(i)]['second']['attempts'],
-                                      total_serve_counts["Player " + str(i)]['faults']])
+                                total_serve_counts["Player " + str(i)]['first']['attempts'],
+                                total_serve_counts["Player " + str(i)]['second']['attempts'],
+                                    total_serve_counts["Player " + str(i)]['faults']])
                 
             serve_columns = ["Player", "Total First Serve Count", "Total Second Serve Count", "Total Double Faults"]
             Output.table(serve_columns, serve_data)
