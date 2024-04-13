@@ -29,14 +29,14 @@ if s != "y" and s != "Y":
     logger.warning("Probability of winning point on second serve (ex: 0.41)")
     
     print("")
-    P0FS   = float(input(Output.colored("P0 first serve            > ", color='197', attrs='bold')))
-    P0FSW  = float(input(Output.colored("P0 wins with first serve  > ", color='197', attrs='bold')))
-    P0SS   = float(input(Output.colored("P0 second serve           > ", color='197', attrs='bold')))
-    P0SSW  = float(input(Output.colored("P0 wins with second serve > ", color='197', attrs='bold')))
-    P1FS   = float(input(Output.colored("P1 first serve            > ", color='12', attrs='bold')))
-    P1FSW  = float(input(Output.colored("P1 wins with first serve  > ", color='12', attrs='bold')))
-    P1SS   = float(input(Output.colored("P1 second serve           > ", color='12', attrs='bold')))
-    P1SSW  = float(input(Output.colored("P1 wins with second serve > ", color='12', attrs='bold')))
+    P0FS   = float(input(Output.colored("[+] P0 first serve            > ", color='197', attrs='bold')))
+    P0FSW  = float(input(Output.colored("[+] P0 wins with first serve  > ", color='197', attrs='bold')))
+    P0SS   = float(input(Output.colored("[+] P0 second serve           > ", color='197', attrs='bold')))
+    P0SSW  = float(input(Output.colored("[+] P0 wins with second serve > ", color='197', attrs='bold')))
+    P1FS   = float(input(Output.colored("[+] P1 first serve            > ", color='12', attrs='bold')))
+    P1FSW  = float(input(Output.colored("[+] P1 wins with first serve  > ", color='12', attrs='bold')))
+    P1SS   = float(input(Output.colored("[+] P1 second serve           > ", color='12', attrs='bold')))
+    P1SSW  = float(input(Output.colored("[+] P1 wins with second serve > ", color='12', attrs='bold')))
     
     # P0FS  = float(input("P0 first serve            > "))
     # P0FSW = float(input("P0 wins with first serve  > "))
@@ -46,10 +46,16 @@ if s != "y" and s != "Y":
     # P1FSW = float(input("P1 wins with first serve  > "))
     # P1SS  = float(input("P1 second serve           > "))
     # P1SSW = float(input("P1 wins with second serve > "))
-    
-#Check that all the parameters are valid probabilites
-assert min(P0FS,P0FSW,P0SS,P0SSW,P1FS,P1FSW,P1SS,P1SSW) >= 0 and max(P0FS,P0FSW,P0SS,P0SSW,P1FS,P1FSW,P1SS,P1SSW) <= 1, "Error: All probabilites must be between 0 and 1"
 
+   
+# #Check that all the parameters are valid probabilites
+# assert min(P0FS,P0FSW,P0SS,P0SSW,P1FS,P1FSW,P1SS,P1SSW) >= 0 and max(P0FS,P0FSW,P0SS,P0SSW,P1FS,P1FSW,P1SS,P1SSW) <= 1, "Error: All probabilites must be between 0 and 1"
+
+try:
+    assert min(P0FS,P0FSW,P0SS,P0SSW,P1FS,P1FSW,P1SS,P1SSW) >= 0 and max(P0FS,P0FSW,P0SS,P0SSW,P1FS,P1FSW,P1SS,P1SSW) <= 1
+except Exception as e:
+    logger.error("Error: All probabilites must be between 0 and 1")
+    logger.error(e)
 #Decide who is serving first (player 0 or 1)
 serving = random.randint(0, 1)
 print("Player", serving, "serving first")
