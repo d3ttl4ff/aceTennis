@@ -414,7 +414,7 @@ def PlayMatch():
                 Output.plot_point_growth(total_tracked_points['Player 0'], total_tracked_points['Player 1'])
             
             return set_winner
-        
+          
 PlayMatch()
 
 print("\nEnd of simulation.")
