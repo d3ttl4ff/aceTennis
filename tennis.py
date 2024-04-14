@@ -53,10 +53,14 @@ assert min(P0FS,P0FSW,P0SS,P0SSW,P1FS,P1FSW,P1SS,P1SSW) >= 0 and max(P0FS,P0FSW,
 
 livematch = False
 matchchoice = input(Output.colored("[~] Do you want to see the live output? (y/n) > ", color='white', attrs='bold')).lower()
-print("")
+# print("")
 
 if matchchoice == "y":
     livematch = True
+    
+serve_win_choice = input(Output.colored("[~] Do you want to see the serve win percentage graph upon completion? (y/n) > ", color='white', attrs='bold')).lower()
+point_growth_choice = input(Output.colored("[~] Do you want to see the point growth graph upon completion? (y/n) > ", color='white', attrs='bold')).lower()
+print("")
 
 #Decide who is serving first (player 0 or 1)
 serving = random.randint(0, 1)
@@ -396,19 +400,18 @@ def PlayMatch():
                 serve_data.append([f"Player {i}", 
                                 total_serve_counts["Player " + str(i)]['first']['attempts'],
                                 total_serve_counts["Player " + str(i)]['second']['attempts'],
-                                    total_serve_counts["Player " + str(i)]['faults']])
+                                total_serve_counts["Player " + str(i)]['faults']])
                 
             serve_columns = ["Player", "Total First Serve Count", "Total Second Serve Count", "Total Double Faults"]
             Output.table(serve_columns, serve_data)
             
-            print(total_tracked_points['Player 0'])
-            print(total_tracked_points['Player 1'])
-            print(len(total_tracked_points['Player 0']))
-            print(len(total_tracked_points['Player 1']))
-            
             # Output.plot_serve_win_percentages(first_serve_win_pct, second_serve_win_pct)
+            # Output.plot_point_growth(total_tracked_points['Player 0'], total_tracked_points['Player 1'])
             
-            Output.plot_point_growth(total_tracked_points['Player 0'], total_tracked_points['Player 1'])
+            if serve_win_choice == "y":
+                Output.plot_serve_win_percentages(first_serve_win_pct, second_serve_win_pct)
+            if point_growth_choice == "y":
+                Output.plot_point_growth(total_tracked_points['Player 0'], total_tracked_points['Player 1'])
             
             return set_winner
         

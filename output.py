@@ -248,3 +248,4 @@ class Output(object):
         plt.legend()
         plt.grid(True)
         plt.show()
+        
