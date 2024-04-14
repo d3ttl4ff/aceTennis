@@ -17,6 +17,15 @@ P1FSW = 0.71
 P1SS  = 0.92
 P1SSW = 0.60
 
+probability_data = []
+probability_data.append(["Player 0", P0FS, P0FSW, P0SS, P0SSW])
+probability_data.append(["Player 1", P1FS, P1FSW, P1SS, P1SSW])
+
+columns = ["Player", "First Serve Legal", "Win Pt First Serve", "Second Serve Legal", "Win Pt Second Serve"]
+
+Output.table(columns, probability_data)
+print("")
+
 #Ask the user if they want to specify different parameter values
 # s = input("[~] Use default input parameters? (y/n) > ")
 s = input(Output.colored("[~] Use default input parameters? (y/n) > ", color='white', attrs='bold'))
