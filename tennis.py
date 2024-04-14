@@ -53,7 +53,7 @@ if matchchoice == "y":
 serving = random.randint(0, 1)
 # print("Player", serving, "serving first")
 Output.print("[*] Player " + str(serving) + " wins the toss", color='blue', attrs='bold')
-Output.print(f"[+] Player {serving} serving first", color='190', attrs='bold')
+Output.print(f"[+] Player {serving} will serve first", color='green', attrs='bold')
      
 def PointWinner(serving, P0FS, P0FSW, P0SS, P0SSW, P1FS, P1FSW, P1SS, P1SSW):
     """The function takes the current server as a parameter and returns the winner of the point."""

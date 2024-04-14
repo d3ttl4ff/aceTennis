@@ -170,28 +170,19 @@ class Output(object):
         else:
             point_count = str(point_count)
             
-        # if score['Player 0'] < 10:
-        #     score['Player 0'] = "0" + str(score['Player 0'])
-        # else:
-        #     score['Player 0'] = str(score['Player 0'])
-        
-        # if score['Player 1'] < 10:
-        #     score['Player 1'] = "0" + str(score['Player 1'])
-        # else:
-        #     score['Player 1'] = str(score['Player 1'])
-        for key, value in score.items():
-            if value < 10:
-                score[key] = "0" + str(value)
+        for player, point in score.items():
+            if point < 10:
+                score[player] = "0" + str(point)
             else:
-                score[key] = str(value)    
+                score[player] = str(point)    
         
 
         point_part = Output.colored('Point ' + point_count + ': ', color="green")
-        winner_part = Output.colored('Player ' + winner + ' wins the point | ', color=font_color)
+        winner_part = Output.colored('Player ' + winner + ' wins the point ', color=font_color)
  
         # current_score_part = Output.colored("Current score - Player 0: ", color="white") + Output.colored(str(score['Player 0']), color="190"), Output.colored("Player 1: ", color="white") + Output.colored(str(score['Player 1']), color="190")
         
-        print(point_part + winner_part + Output.colored("Current score - Player 0: ", color="white") + Output.colored(score['Player 0'], color="190") + ", " + Output.colored("Player 1: ", color="white") + Output.colored(score['Player 1'], color="190"))
+        print(point_part + winner_part + Output.colored("| Current score - Player 0: ", color="white") + Output.colored(score['Player 0'], color="190") + ", " + Output.colored("Player 1: ", color="white") + Output.colored(score['Player 1'], color="190"))
         # print("")
         
         
