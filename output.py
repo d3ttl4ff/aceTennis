@@ -263,18 +263,39 @@ class Output(object):
         plt.ylim(0, 100)  # Limit y-axis to 100% for clarity
         plt.show()
         
-    @staticmethod
-    def plot_point_growth(points_player_0, points_player_1):
-        plt.figure(figsize=(10, 6))
-        # Time points for each point made, assuming each point is a separate time instance
-        time_steps = list(range(max(len(points_player_0), len(points_player_1))))
+    # @staticmethod
+    # def plot_point_growth(points_player_0, points_player_1):
+    #     plt.figure(figsize=(10, 6))
+
+    #     # Function to calculate cumulative points for the player
+    #     def calculate_cumulative_points(points):
+    #         cumulative_points = []
+    #         current_total = 0
+    #         for i, point in enumerate(points):
+    #             if i == 0:
+    #                 # Start with the first point score as the starting cumulative total
+    #                 current_total = point
+    #             else:
+    #                 # Only increment cumulative total if the current point is greater than the last point
+    #                 if point > points[i - 1]:
+    #                     current_total += (point - points[i - 1])
+    #             cumulative_points.append(current_total)
+    #         return cumulative_points
+
+    #     # Calculate cumulative points for each player
+    #     cumulative_points_0 = calculate_cumulative_points(points_player_0)
+    #     cumulative_points_1 = calculate_cumulative_points(points_player_1)
+
+    #     # Generate x-axis values as the length of player 0's points or player 1's points
+    #     x_axis_values = [i for i in range(len(cumulative_points_0))]
+
+    #     # Plotting the data
+    #     plt.plot(x_axis_values, cumulative_points_0, marker='o', linestyle='-', color='#ABD200', label='Player 0')
+    #     plt.plot(x_axis_values, cumulative_points_1, marker='o', linestyle='-', color='#F4034D', label='Player 1')
         
-        plt.plot(time_steps[:len(points_player_0)], points_player_0, marker='o', linestyle='-', color='#ABD200', label='Player 0')
-        plt.plot(time_steps[:len(points_player_1)], points_player_1, marker='o', linestyle='-', color='#F4034D', label='Player 1')
-        
-        plt.title('Point Growth Over Time')
-        plt.xlabel('Point Number')
-        plt.ylabel('Total Points')
-        plt.legend()
-        plt.grid(True)
-        plt.show()
+    #     plt.title('Cumulative Point Growth Over Time')
+    #     plt.xlabel('Total Points Played (Both Players)')
+    #     plt.ylabel('Cumulative Points Scored')
+    #     plt.legend()
+    #     plt.grid(True)
+    #     plt.show()

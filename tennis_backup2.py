@@ -121,9 +121,6 @@ def PlayGame(serving, P0FS, P0FSW, P0SS, P0SSW, P1FS, P1FSW, P1SS, P1SSW, livema
     # Initialize the scores for both players in a dictionary with the names of the players as keys
     score = {"Player 0": 0, "Player 1": 0}
     
-    # List to track scores per point for both players
-    point_scores = {"Player 0": [], "Player 1": []}
-    
     # Initialize a counter for the number of points played
     point_count = 0
     
@@ -155,11 +152,8 @@ def PlayGame(serving, P0FS, P0FSW, P0SS, P0SSW, P1FS, P1FSW, P1SS, P1SSW, livema
         for player in ['Player 0', 'Player 1']:
             for serve in ['first', 'second']:
                 serve_counts[player][serve]['attempts'] += new_serve_counts[player][serve]['attempts']
-                serve_counts[player][serve]['wins'] += new_serve_counts[player][serve]['wins']    
+                serve_counts[player][serve]['wins'] += new_serve_counts[player][serve]['wins']
             serve_counts[player]['faults'] += new_serve_counts[player]['faults']
-            
-        point_scores['Player 0'].append(score['Player 0'])
-        point_scores['Player 1'].append(score['Player 1'])
         
         # Print the outcome of the current point
         if livematch:
@@ -168,7 +162,7 @@ def PlayGame(serving, P0FS, P0FSW, P0SS, P0SSW, P1FS, P1FSW, P1SS, P1SSW, livema
         # If the winner has won 4 or more points and has 2 more points than the opponent, the game is over
         if score["Player " + str(winner)] >= 4 and score["Player " + str(winner)] - score["Player " + str(1-winner)] >= 2:
             service_game_win = 1 if winner == serving else 0
-            return winner, service_game_win, point_count, score, serve_counts, point_scores
+            return winner, service_game_win, point_count, score, serve_counts
 
 def PlaySet(serving, P0FS, P0FSW, P0SS, P0SSW, P1FS, P1FSW, P1SS, P1SSW, livematch):
     """The function simulates an entire set and determines the winner.
@@ -184,9 +178,6 @@ def PlaySet(serving, P0FS, P0FSW, P0SS, P0SSW, P1FS, P1FSW, P1SS, P1SSW, livemat
     """
     # Initialize the scores for both players in a dictionary with the names of the players as keys
     score = {"Player 0": 0, "Player 1": 0}
-    
-    # Track point scores for each player
-    all_point_scores = {"Player 0": [], "Player 1": []}
     
     # Initialize a counter for the number of games played
     game_count = 0
@@ -210,7 +201,7 @@ def PlaySet(serving, P0FS, P0FSW, P0SS, P0SSW, P1FS, P1FSW, P1SS, P1SSW, livemat
     # Continue playing the set until one player wins 6 or more games and has 2 more games than the opponent
     while True:
         # Determine the winner of the game
-        game_winner, service_game_win, point_count, player_point_score, game_serve_counts, game_point_scores = PlayGame(serving, P0FS, P0FSW, P0SS, P0SSW, P1FS, P1FSW, P1SS, P1SSW, livematch)
+        game_winner, service_game_win, point_count, player_point_score, game_serve_counts = PlayGame(serving, P0FS, P0FSW, P0SS, P0SSW, P1FS, P1FSW, P1SS, P1SSW, livematch)
         
         # Increment the score of the game_winner
         score["Player " + str(game_winner)] += 1
@@ -236,7 +227,6 @@ def PlaySet(serving, P0FS, P0FSW, P0SS, P0SSW, P1FS, P1FSW, P1SS, P1SSW, livemat
         # Accumulate total player points in the set
         for player in ['Player 0', 'Player 1']:
             set_player_points[player] += player_point_score[player]
-            all_point_scores[player].extend(game_point_scores[player])
  
         # Update aggregate serve counts
         for player in ['Player 0', 'Player 1']:
@@ -247,7 +237,7 @@ def PlaySet(serving, P0FS, P0FSW, P0SS, P0SSW, P1FS, P1FSW, P1SS, P1SSW, livemat
         
         # If the game_winner has won 6 or more games and has 2 more games than the opponent, the set is over
         if score["Player " + str(game_winner)] >= 6 and score["Player " + str(game_winner)] - score["Player " + str(1-game_winner)] >= 2:
-            return game_winner, game_wins, service_games_won, game_count, set_total_points, set_player_points, set_serve_counts, all_point_scores
+            return game_winner, game_wins, service_games_won, game_count, set_total_points, set_player_points, set_serve_counts
         
         # Switch the server for the next game
         serving = 1 - serving
@@ -260,9 +250,6 @@ def PlayMatch():
     
     # Initialize a counter for the number of sets played
     set_count = 0
-    
-    # Track total points scored by each player
-    total_tracked_points = {"Player 0": [], "Player 1": []}
     
     # Track set wins over time 
     set_wins = {"Player 0": [], "Player 1": []}
@@ -289,7 +276,7 @@ def PlayMatch():
     # Continue playing the match until one player wins 3 sets
     while True:
         # Determine the winner of the set
-        set_winner, game_wins, service_games_won, game_count, set_total_points, set_player_points, set_serve_counts, match_point_scores = PlaySet(serving, P0FS, P0FSW, P0SS, P0SSW, P1FS, P1FSW, P1SS, P1SSW, livematch)
+        set_winner, game_wins, service_games_won, game_count, set_total_points, set_player_points, set_serve_counts = PlaySet(serving, P0FS, P0FSW, P0SS, P0SSW, P1FS, P1FSW, P1SS, P1SSW, livematch)
         
         # Increment the score of the set_winner
         score["Player " + str(set_winner)] += 1
@@ -303,7 +290,6 @@ def PlayMatch():
             total_game_wins[player] += game_wins[player]
             total_service_games_won[player] += service_games_won[player]
             total_player_points[player] += set_player_points[player]
-            total_tracked_points[player].extend(match_point_scores[player])
         
         total_game_count += game_count
         total_point_count += set_total_points
@@ -401,14 +387,12 @@ def PlayMatch():
             serve_columns = ["Player", "Total First Serve Count", "Total Second Serve Count", "Total Double Faults"]
             Output.table(serve_columns, serve_data)
             
-            print(total_tracked_points['Player 0'])
-            print(total_tracked_points['Player 1'])
-            print(len(total_tracked_points['Player 0']))
-            print(len(total_tracked_points['Player 1']))
+            Output.plot_serve_win_percentages(first_serve_win_pct, second_serve_win_pct)
             
-            # Output.plot_serve_win_percentages(first_serve_win_pct, second_serve_win_pct)
+            points_player_0 = [1, 2, 2, 3, 4, 5, 6, 7]
+            points_player_1 = [0, 1, 2, 3, 3, 4, 5, 5]
             
-            Output.plot_point_growth(total_tracked_points['Player 0'], total_tracked_points['Player 1'])
+            Output.plot_point_growth(points_player_0, points_player_1)
             
             return set_winner
         
