@@ -11,6 +11,7 @@ To run the simulator, you need to have Python installed on your computer. You ca
 
 
 And then you have to install these libraries:
+
 ```pip install matplotlib```
 
 ```pip install numpy```
