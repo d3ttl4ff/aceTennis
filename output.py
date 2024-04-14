@@ -186,16 +186,95 @@ class Output(object):
         # print("")
         
         
+    # @staticmethod
+    # def PlotGameWins(game_wins):
+    #     plt.figure(figsize=(10, 5))
+    #     plt.plot(game_wins["Player 0"], label='Player 0 Game Wins', marker='o')
+    #     plt.plot(game_wins["Player 1"], label='Player 1 Game Wins', marker='o')
+    #     plt.title('Game Wins Over Time')
+    #     plt.xlabel('Game Number')
+    #     plt.ylabel('Total Games Won')
+    #     plt.legend()
+    #     plt.grid(True)
+    #     plt.show() 
+        
+    # @staticmethod
+    # def plot_match_statistics(total_game_wins, first_serve_win_pct, second_serve_win_pct, total_serve_counts):
+    #     # Setup the figure and subplots
+    #     fig, axes = plt.subplots(2, 2, figsize=(14, 10))  # 2x2 grid of plots
+    #     fig.suptitle('Match Statistics Overview', fontsize=16)
+
+    #     # Total Games Won
+    #     players = ['Player 0', 'Player 1']
+    #     games_won = [total_game_wins['Player 0'], total_game_wins['Player 1']]
+    #     axes[0, 0].bar(players, games_won, color=['red', 'blue'])
+    #     axes[0, 0].set_title('Total Games Won')
+    #     axes[0, 0].set_ylabel('Games Won')
+
+    #     # Serve Win Percentages
+    #     ind = range(len(players))  # the x locations for the groups
+    #     width = 0.35  # the width of the bars
+    #     first_serve_pct = [first_serve_win_pct['Player 0'], first_serve_win_pct['Player 1']]
+    #     second_serve_pct = [second_serve_win_pct['Player 0'], second_serve_win_pct['Player 1']]
+
+    #     p1 = axes[0, 1].bar(ind, first_serve_pct, width, label='First Serve', color='green')
+    #     p2 = axes[0, 1].bar(ind, second_serve_pct, width, bottom=first_serve_pct, label='Second Serve', color='lightgreen')
+
+    #     axes[0, 1].set_title('Serve Win Percentages')
+    #     axes[0, 1].set_xticks(ind)
+    #     axes[0, 1].set_xticklabels(players)
+    #     axes[0, 1].set_ylabel('Percentage')
+    #     axes[0, 1].legend()
+
+    #     # Total Double Faults
+    #     double_faults = [total_serve_counts['Player 0']['faults'], total_serve_counts['Player 1']['faults']]
+    #     axes[1, 0].bar(players, double_faults, color=['purple', 'pink'])
+    #     axes[1, 0].set_title('Total Double Faults')
+    #     axes[1, 0].set_ylabel('Faults')
+
+    #     # Adjust layout
+    #     plt.tight_layout(rect=[0, 0.03, 1, 0.95])
+    #     plt.show()
+    
     @staticmethod
-    def PlotGameWins(game_wins):
-        plt.figure(figsize=(10, 5))
-        plt.plot(game_wins["Player 0"], label='Player 0 Game Wins', marker='o')
-        plt.plot(game_wins["Player 1"], label='Player 1 Game Wins', marker='o')
-        plt.title('Game Wins Over Time')
-        plt.xlabel('Game Number')
-        plt.ylabel('Total Games Won')
+    def plot_serve_win_percentages(first_serve_win_pct, second_serve_win_pct):
+        # Extract data for plotting
+        categories = ['First Serve Win %', 'Second Serve Win %']
+        player0_data = first_serve_win_pct['Player 0'], second_serve_win_pct['Player 0']
+        player1_data = first_serve_win_pct['Player 1'], second_serve_win_pct['Player 1']
+        
+        bar_width = 0.35  # width of the bars
+        index = range(len(categories))  # bar positions
+
+        plt.figure(figsize=(8, 6))
+        plt.bar(index, player0_data, bar_width, label='Player 0', color='#ABD200', alpha=0.9)
+        plt.bar([p + bar_width for p in index], player1_data, bar_width, label='Player 1', color='#F4034D', alpha=0.9)
+
+        plt.xlabel('Serve Type')
+        plt.ylabel('Win Percentage')
+        plt.title('Serve Win Percentages by Player')
+        plt.xticks([p + bar_width / 2 for p in index], categories)
         plt.legend()
         plt.grid(True)
-        plt.show() 
         
+        # Set y-axis to have ticks every 10 percentage points
+        plt.yticks(range(0, 101, 10))  # Generates ticks from 0 to 100 every 10 units
         
+        plt.ylim(0, 100)  # Limit y-axis to 100% for clarity
+        plt.show()
+        
+    @staticmethod
+    def plot_point_growth(points_player_0, points_player_1):
+        plt.figure(figsize=(10, 6))
+        # Time points for each point made, assuming each point is a separate time instance
+        time_steps = list(range(max(len(points_player_0), len(points_player_1))))
+        
+        plt.plot(time_steps[:len(points_player_0)], points_player_0, marker='o', linestyle='-', color='#ABD200', label='Player 0')
+        plt.plot(time_steps[:len(points_player_1)], points_player_1, marker='o', linestyle='-', color='#F4034D', label='Player 1')
+        
+        plt.title('Point Growth Over Time')
+        plt.xlabel('Point Number')
+        plt.ylabel('Total Points')
+        plt.legend()
+        plt.grid(True)
+        plt.show()

@@ -346,6 +346,9 @@ def PlayMatch():
             # Calculate serve win percentages
             first_serve_win_pct = {}
             second_serve_win_pct = {}
+            first_serve_in_pct = {}
+            second_serve_in_pct = {}
+            serve_win_pct = {}
             
             for player in ['Player 0', 'Player 1']:
                 first_attempts = total_serve_counts[player]['first']['attempts']
@@ -355,7 +358,10 @@ def PlayMatch():
                 
                 first_serve_win_pct[player] = (first_wins / first_attempts * 100) if first_attempts > 0 else 0
                 second_serve_win_pct[player] = (second_wins / second_attempts * 100) if second_attempts > 0 else 0
-        
+                
+                first_serve_in_pct[player] = (first_attempts / (first_attempts + total_serve_counts[player]['faults']) * 100) if (first_attempts + total_serve_counts[player]['faults']) > 0 else 0
+                second_serve_in_pct[player] = (second_attempts / (second_attempts + total_serve_counts[player]['faults']) * 100) if (second_attempts + total_serve_counts[player]['faults']) > 0 else 0
+
             print("")
             for player in ['Player 0', 'Player 1']:
                 if player == 'Player 0':
@@ -380,6 +386,13 @@ def PlayMatch():
                 
             serve_columns = ["Player", "Total First Serve Count", "Total Second Serve Count", "Total Double Faults"]
             Output.table(serve_columns, serve_data)
+            
+            Output.plot_serve_win_percentages(first_serve_win_pct, second_serve_win_pct)
+            
+            points_player_0 = [1, 2, 2, 3, 4, 5, 6, 7]
+            points_player_1 = [0, 1, 2, 3, 3, 4, 5, 5]
+            
+            Output.plot_point_growth(points_player_0, points_player_1)
             
             return set_winner
         
