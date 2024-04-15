@@ -14,13 +14,9 @@ And then you have to install these libraries:
 
 ```
 pip install matplotlib
-
 pip install numpy
-
 pip install colorama
-
 pip install colored
-
 pip install prettytable
 ```
 
@@ -29,8 +25,6 @@ Once you have Python and the dependencies installed, you can run the simulator b
 
 ```
 git clone https://github.com/d3ttl4ff/aceTennis.git
-
 cd aceTennis
-
 python tennis.py
 ```
