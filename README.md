@@ -1,7 +1,7 @@
 # aceTennis
 A Simple Men's Singles Tennis Simulator
 
-![thumbnail_1](/thumbnails/acesnap_1.png)
+![thumbnail_1](/thumbnails/acesnap_0.png)
 
 ## Introduction
 This is a simple tennis simulator that simulates a simple men's singles tennis match. The simulator is based on the rules of tennis and the scoring system of tennis. The simulator is written in Python and uses the random module to simulate the outcome of each point in the match.
