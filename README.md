@@ -12,21 +12,25 @@ To run the simulator, you need to have Python installed on your computer. You ca
 
 And then you have to install these libraries:
 
-```pip install matplotlib```
+```
+pip install matplotlib
 
-```pip install numpy```
+pip install numpy
 
-```pip install colorama```
+pip install colorama
 
-```pip install colored```
+pip install colored
 
-```pip install prettytable```
+pip install prettytable
+```
 
 
 Once you have Python and the dependencies installed, you can run the simulator by running the following command in the terminal:
 
-```git clone https://github.com/d3ttl4ff/aceTennis.git```
+```
+git clone https://github.com/d3ttl4ff/aceTennis.git
 
-```cd aceTennis```
+cd aceTennis
 
-```python tennis.py```
+python tennis.py
+```
