@@ -1,5 +1,4 @@
 # aceTennis
-<h1 style="color: #FF6347;">aceTennis</h1>
 A Simple Men's Singles Tennis Simulator
 
 ![thumbnail_1](/thumbnails/acesnap_0.png)
